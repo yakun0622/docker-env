@@ -9,10 +9,10 @@ RUN yum install -y wget && \
 
 WORKDIR /app
 
-ADD http://mirror.bit.edu.cn/apache/incubator/skywalking/5.0.0-GA/apache-skywalking-apm-incubating-5.0.0-GA.tar.gz .
+ADD http://mirror.bit.edu.cn/apache/skywalking/6.1.0/apache-skywalking-apm-6.1.0.tar.gz .
 
-RUN tar -xf apache-skywalking-apm-incubating-5.0.0-GA.tar.gz && \ 
-    mv apache-skywalking-apm-incubating skywalking && \ 
+RUN tar -xf apache-skywalking-apm-6.1.0.tar.gz && \ 
+    mv apache-skywalking-apm-bin skywalking && \ 
     echo "tail -f /dev/null" >> /app/skywalking/bin/startup.sh
 
 CMD ["/bin/sh","-c","/app/skywalking/bin/startup.sh" ]

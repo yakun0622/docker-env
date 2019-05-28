@@ -30,7 +30,7 @@ services:
       ELASTICSEARCH_URL: http://elasticsearch:9200
 
   skywalking:
-      image: weihanli/skywalking:5.0.0-GA
+      image: yakun0622/skywalking:6.0.1
       container_name: skywalking
       ports:
         - 10800:10800
