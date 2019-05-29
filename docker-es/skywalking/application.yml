@@ -54,19 +54,10 @@ core:
     hourMetricsDataTTL: ${SW_CORE_HOUR_METRIC_DATA_TTL:36} # Unit is hour
     dayMetricsDataTTL: ${SW_CORE_DAY_METRIC_DATA_TTL:45} # Unit is day
     monthMetricsDataTTL: ${SW_CORE_MONTH_METRIC_DATA_TTL:18} # Unit is month
-# storage:
-#   elasticsearch:
-#     clusterName: elasticsearch
-#     clusterTransportSniffer: true
-#     clusterNodes: 172.18.0.2:9300
-#     indexShardsNumber: 2
-#     indexReplicasNumber: 0
-#     highPerformanceMode: true
-#     ttl: 7
 storage:
  elasticsearch:
    nameSpace: ${SW_NAMESPACE:""}
-   clusterNodes: ${SW_STORAGE_ES_CLUSTER_NODES:localhost:9200}
+   clusterNodes: ${SW_STORAGE_ES_CLUSTER_NODES:elasticsearch:9200}
    user: ${SW_ES_USER:""}
    password: ${SW_ES_PASSWORD:""}
    indexShardsNumber: ${SW_STORAGE_ES_INDEX_SHARDS_NUMBER:2}

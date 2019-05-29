@@ -1,10 +1,12 @@
 version: '2'
 services:
   elasticsearch:
-    image: elasticsearch:5.6
+    image: elasticsearch:6.8.0
+    hostname: elasticsearch
     container_name: elasticsearch
     ports:
       - 9200:9200
+      - 9300:9300
     ulimits:
       nofile:
         soft: 65536
@@ -18,8 +20,9 @@ services:
     mem_limit: 1g # memory limit
 
   kibana:
-    image: kibana:5.6
+    image: kibana:6.8.0
     container_name: kibana
+    hostname: kibana
     ports:
       - 5601:5601
     links:
@@ -32,6 +35,7 @@ services:
   skywalking:
       image: yakun0622/skywalking:6.0.1
       container_name: skywalking
+      hostname: skywalking
       ports:
         - 10800:10800
         - 11800:11800
