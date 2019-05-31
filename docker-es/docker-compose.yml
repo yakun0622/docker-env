@@ -12,6 +12,9 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" #specific es java memory
+    mem_limit: 1g # memory limit
 
   es-node1:
     image:  elasticsearch:6.8.0
@@ -22,6 +25,9 @@ services:
       - ./es-node1/data:/usr/share/elasticsearch/data:rw
       - ./es-node1/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./es-node1/logs:/user/share/elasticsearch/logs:rw
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" #specific es java memory
+    mem_limit: 1g # memory limit
   es-node2:
     image:  elasticsearch:6.8.0
     container_name: es-node2
@@ -31,6 +37,9 @@ services:
       - ./es-node2/data:/usr/share/elasticsearch/data:rw
       - ./es-node2/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./es-node2/logs:/user/share/elasticsearch/logs:rw
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" #specific es java memory
+    mem_limit: 1g # memory limit
   es-head:
       image: tobias74/elasticsearch-head:6
       container_name: es-head
@@ -38,18 +47,18 @@ services:
       ports:
       - "9100:9100"
 
-  kibana:
-    image: kibana:6.8.0
-    container_name: kibana
-    hostname: kibana
-    ports:
-      - 5601:5601
-    links:
-      - es-master:elasticsearch
-    depends_on:
-      - es-master
-    environment:
-      ELASTICSEARCH_URL: http://elasticsearch:9200
+  # kibana:
+  #   image: kibana:6.8.0
+  #   container_name: kibana
+  #   hostname: kibana
+  #   ports:
+  #     - 5601:5601
+  #   links:
+  #     - es-master:elasticsearch
+  #   depends_on:
+  #     - es-master
+  #   environment:
+  #     ELASTICSEARCH_URL: http://elasticsearch:9200
 
   skywalking:
       image: yakun0622/skywalking:6.0.1
@@ -63,6 +72,10 @@ services:
       volumes:
         - ./skywalking/application.yml:/app/skywalking/config/application.yml
       links:
-        - es-master:elasticsearch
+        - es-master:es-master
+        - es-node1:es-node1
+        - es-node2:es-node2
       depends_on:
         - es-master
+        - es-node1
+        - es-node2
