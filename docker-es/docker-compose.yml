@@ -1,23 +1,42 @@
 version: '2'
 services:
-  elasticsearch:
-    image: elasticsearch:6.8.0
+  es-master:
+    image:  elasticsearch:6.8.0
+    container_name: es-master
     hostname: elasticsearch
-    container_name: elasticsearch
-    ports:
-      - 9200:9200
-      - 9300:9300
-    ulimits:
-      nofile:
-        soft: 65536
-        hard: 65536
     restart: always
-    environment:
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" #specific es java memory
     volumes:
-      - ./es/data:/usr/share/elasticsearch/data
-      - ./es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-    mem_limit: 1g # memory limit
+      - ./es-master/data:/usr/share/elasticsearch/data:rw
+      - ./es-master/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es-master/logs:/user/share/elasticsearch/logs:rw
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  es-node1:
+    image:  elasticsearch:6.8.0
+    container_name: es-node1
+    hostname: es-node1
+    restart: always
+    volumes:
+      - ./es-node1/data:/usr/share/elasticsearch/data:rw
+      - ./es-node1/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es-node1/logs:/user/share/elasticsearch/logs:rw
+  es-node2:
+    image:  elasticsearch:6.8.0
+    container_name: es-node2
+    hostname: es-node2
+    restart: always
+    volumes:
+      - ./es-node2/data:/usr/share/elasticsearch/data:rw
+      - ./es-node2/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./es-node2/logs:/user/share/elasticsearch/logs:rw
+  es-head:
+      image: tobias74/elasticsearch-head:6
+      container_name: es-head
+      restart: always
+      ports:
+      - "9100:9100"
 
   kibana:
     image: kibana:6.8.0
@@ -26,9 +45,9 @@ services:
     ports:
       - 5601:5601
     links:
-      - elasticsearch:elasticsearch
+      - es-master:elasticsearch
     depends_on:
-      - elasticsearch
+      - es-master
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
 
@@ -44,6 +63,6 @@ services:
       volumes:
         - ./skywalking/application.yml:/app/skywalking/config/application.yml
       links:
-        - elasticsearch:elasticsearch
+        - es-master:elasticsearch
       depends_on:
-        - elasticsearch
+        - es-master
